@@ -1,4 +1,4 @@
-{%  from "macros/svgs.html" import moon, sun %}
+{% from "macros/svgs.html" import moon, sun %}
 
 {% macro header(email, themne) %}
     <header class="header">
@@ -19,7 +19,8 @@
                     >
                         <span class="nav__item">Log in</span>
                     </a>
-                    <a href="#" class="nav__link">
+                    <a href="{{ url_for('pages.register') }}"
+                       class="nav__link {{ 'nav__link--active' if request.path == url_for('pages.register') }}">
                         <span class="nav__item">Register</span>
                     </a>
                 {% else %}
@@ -27,11 +28,11 @@
                        class="nav__link {{ 'nav__link--active' if request.path == url_for('pages.index') }}">
                         <span class="nav__item">Movies</span>
                     </a>
-                    <a href="#" class="nav__link">
+                    <a href="{{ url_for('pages.logout') }}" class="nav__link">
                         <span class="nav__item">Log out</span>
                     </a>
                 {% endif %}
-            <a href="{{ url_for('pages.toggle_theme', current_page=request.path) }}" class="nav__link">
+                <a href="{{ url_for('pages.toggle_theme', current_page=request.path) }}" class="nav__link">
                 <span class="nav__item">
                     {% if theme == "dark" %}
                         {{ sun("nav__icon") }}
@@ -39,7 +40,7 @@
                         {{ moon("nav__icon") }}
                     {% endif %}
                 </span>
-            </a>
+                </a>
             </nav>
         </div>
     </header>

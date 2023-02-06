@@ -16,10 +16,12 @@
     </head>
     
     <body>
-    {{ header(session.get("email"), session.get("theme")) }}
+        {{ header(session.get("email"), session.get("theme")) }}
+
         <main class="main">
             {% block main_content %} {% endblock %}
         </main>
-    {{ footer() }}
+
+        {{ footer() }}
     </body>
 </html>

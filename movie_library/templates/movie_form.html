@@ -1,4 +1,4 @@
-{% from "macros/fields.html" import render_text_field %}
+{% from "macros/fields.html" import render_text_field, render_area_field %}
 
 {% extends "layout.html" %}
 
@@ -14,6 +14,13 @@
             {{ render_text_field(form.title) }}
             {{ render_text_field(form.director) }}
             {{ render_text_field(form.year) }}
+
+            {{ render_area_field(form.cast) }}
+            {{ render_area_field(form.series) }}
+            {{ render_area_field(form.tags) }}
+
+            {{ render_area_field(form.description) }}
+            {{ render_text_field(form.video_link) }}
 
             <div>
                 {{ form.submit(class_="button button--form") }}
