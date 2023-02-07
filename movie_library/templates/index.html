@@ -1,45 +1,66 @@
 {% extends "layout.html" %}
 
 {% block head_content %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/movies.css') }}" />
+    <!-- Include CSS file for the movies table -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/movies.css') }}"/>
 {% endblock %}
 
 {% block main_content %}
-
+    <!-- Check if there are any movies in the movies_data variable -->
     {%- if movies_data %}
+        <!-- Create a table for movie information -->
         <table class="table">
+            <!-- Group columns for styling -->
             <colgroup>
                 <col style="width: 60%">
                 <col style="width: 25%">
                 <col style="width: 15%">
             </colgroup>
+            <!-- Table header -->
             <thead>
-                <tr class="table__header">
-                    <th class="table__cell table__cell--header">Title</th>
-                    <th class="table__cell table__cell--header">Release Date</th>
-                    <th class="table__cell table__cell--header"></th>
-                </tr>
+            <tr class="table__header">
+                <th class="table__cell table__cell--header">Title</th>
+                <th class="table__cell table__cell--header">Release Date</th>
+                <th class="table__cell table__cell--header"></th>
+            </tr>
             </thead>
+            <!-- Table body -->
             <tbody>
-                {% for movie in movies_data %}
-                    <tr>
-                        <td class="table__cell">
-                            <p class="table__movieTitle">{{ movie.title }}</p>
-                            <p class="table__movieDirector">By {{ movie.director }}</p>
-                        </td>
-                        <td class="table__cell">{{ movie.year }}</td>
-                        <td class="table__cell"><a href="{{ url_for('pages.movie', _id=movie._id) }}" class="table__link">View</a></td>
-                    </tr>
-                {% endfor %}
+            <!-- Loop through movies in the movies_data variable and display information for each movie -->
+            {% for movie in movies_data %}
+                <tr>
+                    <td class="table__cell">
+                        <!-- Display movie title -->
+                        <p class="table__movieTitle">{{ movie.title }}</p>
+                        <!-- Display movie director -->
+                        <p class="table__movieDirector">By {{ movie.director }}</p>
+                    </td>
+                    <!-- Display movie release year -->
+                    <td class="table__cell">{{ movie.year }}</td>
+                    <!-- Link to view movie details -->
+                    <td class="table__cell">
+                        <a href="{{ url_for('pages.movie', _id=movie._id) }}" class="table__link">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
+        <!-- If there are no movies in the movies_data variable -->
     {% else %}
-        <p class="table__empty">You haven't added any movies yet. <a href="{{ url_for('pages.add_movie') }}" class="link">Add one!</a></p>
+        <!-- Display a message indicating there are no movies added -->
+        <p class="table__empty">You haven't added any movies yet.
+            <!-- Link to add a movie -->
+            <a href="{{ url_for('pages.add_movie') }}" class="link">Add one!</a>
+        </p>
     {% endif %}
 
+    <!-- Link to add a movie -->
     <a href="{{ url_for('pages.add_movie') }}" class="button button--add">
+        <!-- Add button symbol -->
         <span>+</span>
     </a>
-
 {% endblock %}
+
+
+

@@ -1,30 +1,42 @@
+<!-- This line of code includes the "fields.html" file from the macros directory. -->
 {% from "macros/fields.html" import render_text_field %}
 
+<!-- This line of code extends the "layout.html" file to reuse its code. -->
 {% extends "layout.html" %}
 
+<!-- This block of code adds a link to a stylesheet for the form. -->
 {%- block head_content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}" />
 {% endblock %}
 
+<!-- This block of code contains the main content of the login form. -->
 {% block main_content %}
 
+    <!-- This form has a "login" name and uses the "post" method to submit data. -->
     <form name="login" method="post" novalidate class="form">
+
+        <!-- This code displays any flash messages. -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {%- for category, message in messages %}
                 <span class="form__flash form__flash--{{category}}"> {{ message }}</span>
             {% endfor %}
         {% endwith %}
 
+        <!-- This div container holds the form inputs. -->
         <div class="form__container">
+            <!-- This line of code displays the hidden form tag. -->
             {{ form.hidden_tag() }}
 
+            <!-- These lines of code display the email and password fields. -->
             {{ render_text_field(form.email) }}
             {{ render_text_field(form.password) }}
 
+            <!-- This text provides a link to register for a new account. -->
             <span class="form__small">
                 Don't have an account? <a href="{{ url_for('pages.register') }}" class="form__link">Register here</a>.
             </span>
 
+            <!-- This div contains the submit button. -->
             <div>
                 {{ form.submit(class_="button button--form") }}
             </div>
