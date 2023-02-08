@@ -3,27 +3,34 @@
 {% extends "layout.html" %}
 
 {%- block head_content %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}" />
+    <!-- Add a stylesheet for forms -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}"/>
 {% endblock %}
 
 {% block main_content %}
-
+    <!-- Create a form with the name "register" -->
     <form name="register" method="post" novalidate class="form">
         <div class="form__container">
+            <!-- Include a hidden tag for the form -->
             {{ form.hidden_tag() }}
 
+            <!-- Render the email, password, and confirm password fields using the "render_text_field" macro -->
             {{ render_text_field(form.email) }}
             {{ render_text_field(form.password) }}
             {{ render_text_field(form.confirm_password) }}
 
+            <!-- Add a small message for users with existing accounts -->
             <span class="form__small">
-                Already have an account? <a href="{{ url_for('pages.login') }}" class="form__link">Log in here</a>.
-            </span>
+            Already have an account? <a href="{{ url_for('pages.login') }}" class="form__link">Log in here</a>.
+        </span>
 
+            <!-- Add a submit button to the form -->
             <div>
                 {{ form.submit(class_="button button--form") }}
             </div>
         </div>
     </form>
-
 {% endblock %}
+
+
+
