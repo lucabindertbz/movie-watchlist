@@ -7,7 +7,7 @@ import functools
 import uuid
 import datetime
 from dataclasses import asdict
-from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for, request
+from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for, request, app
 # Importing form and model classes from the movie_library module
 from movie_library.forms import LoginForm, RegisterForm, MovieForm, ExtendedMovieForm
 from movie_library.models import User, Movie
@@ -30,7 +30,9 @@ def login_required(route):
             # If there is no email in the session, redirect to the login page
             return redirect(url_for(".login"))
         # If the email is in the session, call the original route
-        return route(*args, **kwargs)
+        # elif # check if user is in database with email and if not session destroy and then redirect to login
+        else:
+            return route(*args, **kwargs)
 
     return route_wrapper
 
@@ -166,7 +168,7 @@ def add_movie():
 
 @pages.route("/logout/")
 def logout():
-    # Save the current theme so it can be restored after the session is cleared
+    # Save the current theme, so it can be restored after the session is cleared
     current_theme = session.get("theme")
 
     # Clear the session data
@@ -220,6 +222,8 @@ def edit_movie(_id: str):
         return redirect(url_for(".movie", _id=movie._id))
 
     # Render the template for the movie form with the movie data and form
+    # If the form has not been submitted or is not valid, the function renders the "movie_form.html" template
+    # with the movie data and form, allowing the user to edit the movie details.
     return render_template("movie_form.html", movie=movie, form=form)
 
 
@@ -227,7 +231,7 @@ def edit_movie(_id: str):
 @pages.get("/movie/<string:_id>/watch")
 @login_required  # User must be logged in to access this route
 def watch_today(_id):
-    # Update the movie document in the database to set the last_watched field to the current date and time
+    # Update the movie document in the database to set the last_watched field to the current date
     current_app.db.movie.update_one(
         {"_id": _id}, {"$set": {"last_watched": datetime.datetime.today()}}
     )
@@ -237,15 +241,19 @@ def watch_today(_id):
 
 
 # Route to rate a movie
-@pages.get("/movie/<string:_id>/rate")
-@login_required  # User must be logged in to access this route
-def rate_movie(_id):
-    # Get the rating from the query parameters
+@pages.get("/movie/<string:_id>/rate")  # This route is triggered on a GET request to the endpoint "/movie/<_id>/rate"
+@login_required  # Require that the user is logged in to access this route
+def rate_movie(_id):  # The view function takes a single argument, the movie _id
+    # Get the rating value from the query parameters of the GET request
+    # The view function, named rate_movie, takes a single argument _id, which is a string passed as a part of the URL.
+    # The <string:_id> syntax in the route is a template variable, and it tells Flask to capture the value of the string
+    # that appears in that position in the URL and pass it to the view function as an argument.
     rating = int(request.args.get("rating"))
-    # Update the movie document in the database to set the rating field
+
+    # Update the movie document in the database with the matching _id
     current_app.db.movie.update_one({"_id": _id}, {"$set": {"rating": rating}})
 
-    # Redirect to the movie page
+    # Redirect the user to the movie page for the movie with the given _id
     return redirect(url_for(".movie", _id=_id))
 
 
@@ -263,3 +271,8 @@ def toggle_theme():
 
     # Redirect to the current page
     return redirect(request.args.get("current_page"))
+
+# @app.errorhandler(404)
+# def page_not_found(error):
+#     # Renders the 404.html template and returns a 404 status code
+#     return render_template("404.html"), 404
